@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전준혁 | 꾸준함으로 성장하는 개발자</title>
+    <!-- Pretendard 폰트 불러오기 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <style>
+        /* ==============================
+           CSS Variables & Reset
+           ============================== */
+        :root {
+            --primary: #2563EB;      /* 딥 블루 */
+            --primary-light: #DBEAFE; /* 라이트 블루 */
+            --white: #FFFFFF;        /* 화이트 */
+            --text-dark: #1F2937;    /* 진한 텍스트 */
+            --text-gray: #4B5563;    /* 중간 텍스트 */
+            --bg-gray: #F9FAFB;      /* 배경용 아주 밝은 회색 */
+        }
+
+        /* 다크모드 변수 설정 */
+        [data-theme="dark"] {
+            --white: #111827;        /* 어두운 배경 */
+            --bg-gray: #1F2937;      /* 카드 등 요소의 어두운 배경 */
+            --text-dark: #F9FAFB;    /* 밝은 텍스트 */
+            --text-gray: #9CA3AF;    /* 밝은 회색 텍스트 */
+            --primary: #60A5FA;      /* 다크모드 전용 밝은 블루 */
+            --primary-light: #1E3A8A; /* 어두운 포인트 배경 */
+            --header-bg: rgba(17, 24, 39, 0.9); /* 다크모드 헤더 배경 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth; 
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        li { list-style: none; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .highlight { color: var(--primary); font-weight: 700; }
+
+        /* Animation Classes */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg, rgba(255, 255, 255, 0.9));
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-weight: 500; color: var(--text-gray); transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--primary); }
+
+        .theme-toggle {
+            background: none; border: none; font-size: 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        /* Hero */
+        .hero {
+            background-color: var(--primary-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .hero-content h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.3; }
+        .hero-content p { font-size: 1.25rem; color: var(--text-gray); margin-bottom: 2rem; }
+        .hero-badge {
+            display: inline-block; background-color: var(--primary); color: #FFFFFF;
+            padding: 8px 16px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem;
+        }
+
+        /* About */
+        .about { padding: 100px 0; background-color: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .about-text h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-dark); }
+        .about-text p { font-size: 1.1rem; color: var(--text-gray); margin-bottom: 1.5rem; line-height: 1.8; }
+        .about-image {
+            background-color: var(--primary-light); border-radius: 20px; padding: 3rem;
+            text-align: center; display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1;
+        }
+        .about-image .icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        /* Strengths */
+        .strengths { padding: 100px 0; background-color: var(--bg-gray); }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .card {
+            background-color: var(--white); padding: 2.5rem 2rem; border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s ease; border-top: 4px solid transparent;
+        }
+        .card:hover { transform: translateY(-10px); border-top: 4px solid var(--primary); }
+        .card-icon {
+            width: 50px; height: 50px; background-color: var(--primary-light); color: var(--primary);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;
+        }
+        .card h3 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .card p { color: var(--text-gray); font-size: 1rem; }
+
+        /* CTA */
+        .cta { padding: 120px 0; background-color: var(--primary); color: #FFFFFF; text-align: center; }
+        .cta h2 { font-size: 2.5rem; margin-bottom: 1.5rem; color: #FFFFFF; }
+        .cta p { font-size: 1.25rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2.5rem; }
+        .btn {
+            display: inline-block; background-color: var(--white); color: var(--primary);
+            padding: 16px 32px; border-radius: 8px; font-size: 1.1rem; font-weight: 700;
+        }
+        .btn:hover { background-color: var(--primary-light); transform: scale(1.05); }
+
+        footer { background-color: var(--text-dark); color: #FFFFFF; padding: 3rem 0; text-align: center; }
+        footer p { opacity: 0.7; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">Junhyeok.</a>
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#strengths">Strengths</a>
+                <a href="#contact">Contact</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="테마 변경">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="container hero-content fade-in-up">
+                <div class="hero-badge">SSAFY 예비 개발자</div>
+                <h1>처음은 서툴지만,<br><span class="highlight">꾸준함으로 성장합니다.</span></h1>
+                <p>안녕하세요! 오늘보다 내일 더 발전하는 개발자, 전준혁입니다.<br>동기 여러분과 함께 훌륭한 개발자로 성장하고 싶습니다.</p>
+                <a href="#about" class="btn">나의 이야기 보기 ↓</a>
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <div class="container">
+                <h2 class="section-title fade-in-up">오늘의 배움이 내일의 개발자를 만듭니다</h2>
+                <p class="section-subtitle fade-in-up">비전공자에서 개발자로, 저의 도전을 소개합니다.</p>
+                
+                <div class="about-grid">
+                    <div class="about-image fade-in-up">
+                        <div class="icon">🚀</div>
+                        <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;">Russian Major</h3>
+                        <p style="color: var(--text-gray); font-size: 1rem;">to Software Developer</p>
+                    </div>
+                    <div class="about-text fade-in-up" style="transition-delay: 0.2s;">
+                        <h3>새로운 언어, 코드와의 만남</h3>
+                        <p>저는 <strong>러시아어</strong>를 전공했습니다. 사람과 사람을 이어주는 언어를 배우다가, 이제는 <strong>프로그래밍</strong>이라는 새로운 언어를 배우며 개발자의 길을 시작했습니다.</p>
+                        <p>개발은 처음이라 낯설고 어려운 순간도 많지만, 하나씩 배우고 직접 결과물을 만들어 가는 과정에서 재미와 성취감을 느끼고 있습니다.</p>
+                        <p>SSAFY에서 꾸준히 배우고 경험을 쌓으며, <strong>사용자에게 도움이 되는 개발자</strong>로 성장하는 것이 저의 목표입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="strengths" id="strengths">
+            <div class="container">
+                <h2 class="section-title fade-in-up">저의 2가지 무기</h2>
+                <p class="section-subtitle fade-in-up">어려움을 극복하며 만들어낸 저만의 강점입니다.</p>
+                <div class="cards-grid">
+                    <div class="card fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="card-icon">1</div>
+                        <h3>끝까지 파고드는 집념</h3>
+                        <p>Git을 처음 배울 때, 개념이 잡히지 않아 큰 어려움을 겪었습니다. 하지만 포기하지 않고 끊임없이 질문하고 복습하여 마침내 제 것으로 만들었습니다.</p>
+                    </div>
+                    <div class="card fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="card-icon">2</div>
+                        <h3>내 것으로 만드는 복습</h3>
+                        <p>한 번 배운 것을 그냥 넘어가지 않습니다. 꾸준히 기록하며 지식을 체화하기 위해 노력합니다. 흡수하는 속도와 깊이는 누구보다 깊다고 자부합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta" id="contact">
+            <div class="container fade-in-up">
+                <h2>앞으로의 성장 여정을<br>함께 지켜봐 주세요!</h2>
+                <p>SSAFY 동기 여러분, 앞으로 1년간 함께 울고 웃으며 멋진 개발자로 성장해 나갑시다. 응원의 한마디 부탁드려요!</p>
+                
+                <!-- 댓글 폼 영역 -->
+                <div id="comment-section" style="max-width: 500px; margin: 2rem auto 0; text-align: left;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="comment-input" placeholder="응원 메시지를 남겨주세요!" style="flex: 1; padding: 12px; border-radius: 8px; border: none; color: var(--text-dark);">
+                        <button id="submit-comment" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--white); color: var(--primary); font-weight: bold; cursor: pointer;">게시</button>
+                    </div>
+                    <ul id="comments-list" style="list-style: none; padding: 0;"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Junhyeok Jeon. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+            setTimeout(() => document.querySelectorAll('#hero .fade-in-up').forEach(el => el.classList.add('visible')), 100);
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            themeToggleBtn.addEventListener('click', () => {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.documentElement.removeAttribute('data-theme');
+                    themeToggleBtn.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeToggleBtn.textContent = '☀️';
+                }
+            });
+
+            // 댓글 기능 추가
+            const commentInput = document.getElementById('comment-input');
+            const submitBtn = document.getElementById('submit-comment');
+            const commentsList = document.getElementById('comments-list');
+
+            submitBtn.addEventListener('click', () => {
+                const text = commentInput.value.trim();
+                if (text) {
+                    const li = document.createElement('li');
+                    li.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                    li.style.padding = '10px';
+                    li.style.borderRadius = '8px';
+                    li.style.marginBottom = '5px';
+                    li.style.fontSize = '0.9rem';
+                    li.textContent = `☕ ${text}`;
+                    commentsList.prepend(li);
+                    commentInput.value = '';
+                }
+            });
+
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed'; canvas.style.top = '0'; canvas.style.left = '0';
+            canvas.style.width = '100vw'; canvas.style.height = '100vh';
+            canvas.style.zIndex = '1'; canvas.style.pointerEvents = 'none';
+            document.body.prepend(canvas);
+
+            const ctx = canvas.getContext('2d');
+            let particlesArray = [];
+            function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            class Particle {
+                constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 1.5 + 0.5; this.speedX = Math.random() * 0.4 - 0.2; this.speedY = Math.random() * 0.4 - 0.2; }
+                update() { this.x += this.speedX; this.y += this.speedY; if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width; if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height; }
+                draw() {
+                    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.4)' : 'rgba(37, 99, 235, 0.4)'; 
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                }
+            }
+            window.addEventListener('resize', resizeCanvas); resizeCanvas();
+            // 파티클 개수를 50개에서 100개로 늘렸습니다.
+            for(let i=0; i<100; i++) particlesArray.push(new Particle());
+            function animate() { ctx.clearRect(0,0, canvas.width, canvas.height); particlesArray.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+            animate();
+        });
+    </script>
+</body>
+</html>
